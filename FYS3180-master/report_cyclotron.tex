@@ -1,0 +1,359 @@
+\documentclass[11pt,a4wide]{article}
+\usepackage{verbatim}
+\usepackage{listings}
+\usepackage{graphicx}
+\usepackage{a4wide}
+\usepackage{color}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage[dvips]{epsfig}
+\usepackage[T1]{fontenc}
+\usepackage{cite} % [2,3,4] --> [2--4]
+\usepackage{shadow}
+\usepackage{hyperref}
+
+\setcounter{tocdepth}{2}
+
+\usepackage[labelfont=bf]{caption} %for bold captions (figure, table...)
+
+\lstset{language=c++}
+\lstset{alsolanguage=[90]Fortran}
+\lstset{basicstyle=\small}
+\lstset{backgroundcolor=\color{white}}
+\lstset{frame=single}
+\lstset{stringstyle=\ttfamily}
+\lstset{keywordstyle=\color{red}\bfseries}
+\lstset{commentstyle=\itshape\color{blue}}
+\lstset{showspaces=false}
+\lstset{showstringspaces=false}
+\lstset{showtabs=false}
+\lstset{breaklines}
+
+\title{{\huge {\bf An introduction to the experimental setup and analyzing methods used at the Oslo Cyclotron Laboratory by use of experimental data from the $\bf {}^{28}\mathrm{ \bf Si(p,p')}^{28}\mathrm{\bf Si}$ reaction.}}\linebreak \linebreak \small{A project in FYS-3180 at} \linebreak \Large{the University of Oslo} }
+\author{Ina K. B. Kullmann}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+The purpose of this article is to give a brief introduction to the detectors, systems and methods used in experimental nuclear physics at the Oslo Cyclotron Laboratory. The Oslo method and why it is useful will be described briefly.
+
+The goal is to learn about how one would prepare for an experiment but most importantly how to correct for different effects due to the response of the detectors. We will choose the reaction ${}^{28}\mathrm{Si(p,p')}^{28}\mathrm{Si}$ and study the raw data from an previous experiment. During the analysis we will also compare the experimental data with existing online databases. 
+
+Our main result will be a final corrected or unfolded coincidence matrix where the excitation energy $E_x$ is plotted versus the gamma energy $E_\gamma$ with number of counts on the z-axis. 
+\end{abstract}
+
+\begin{figure}[htp]
+\centering
+\includegraphics[width=0.46\textwidth]{cactus_forside.jpg}
+\caption{The CACTUS detector in the Oslo Cyclotron Laboratory for the study of particle-$\gamma$ coincidences. (\texttt{//www.mn.uio.no/fysikk/english/research/about/infrastructure/OCL/}) }
+\label{fig:front_page}
+\end{figure}
+
+\begin{center}
+{ \scriptsize \noindent All OCL source codes can be found at: \texttt{https://github.com/oslocyclotronlab/oslo-method-software}. }
+\end{center}
+
+\newpage
+
+\tableofcontents
+\newpage
+
+\section{Motivation and purpose}
+The main motivation for studying the atomic nucleus is to gain a fundamental understanding of the world. That includes understanding the current state of the universe as it is today, but also to understand the origin and the future of the universe. Nuclear physics plays a very important role in understanding how stars form and 'live', but also how the heavy elements (heavier than iron) we have here on earth formed. There are many potential applications of nuclear physics, some examples are energy production including reactor physics, medical diagnosis and treatments. There are many yet unsolved challenges in nuclear physics and thus it is a very active field of research. \footnote{Inspiration for this paragraph found at \texttt{https://www.mn.uio.no/fysikk/english/research/groups/nuclear/}}
+
+When a spesific nuclear reaction is studied it is possible to gain knowledge about a spesific nucleus and its properties in the energy range of the experiment. Usually we do this to obtain the probability for a given reaction, but we often want to know the probabilities for another reaction as well. By use of the Oslo method it is possible extract two important physical properties in one experiment; the nuclear level density and the gamma strength function for the nucleus. When these two properties are known in a energy range it is possible to calculate the cross section, or probabilities of reactions such as neutron capture. This is very fortunate because without the Oslo method one would have to run one experiment for each of the other reactions that give the same result nucleus. 
+
+%the properties and probabilities of the nucleus for a larger energy range than it is possible to achieve with the experiment. but if a fundamental property of the nucleus is measured for one energy range it is possible to extrapolate to higher or lower energies. 
+%In this way it is possible to calculate probabilities for a given reaction for a larger excitation energy range than the experiment, which is very fortunate. 
+%by use of for example the nuclear reaction code \texttt{TALYS}. 
+
+In this project we will have a superficial overview of the analysis or calibration process needed before one can use the Oslo method to obtain the nuclear level density and the gamma strength function for the nucleus. To get hands on experience with the analysis we will study the raw data from an previous experiment and analyze it as it was the first time to do so. It is important to understand the amount of analysis and processing needed to reach a conclusive dataset without systematic errors due to the detectors and the electronics.  We will also quickly have a look at the experimental setup at the Oslo Cyclotron Laboratory and the first two steps of the Oslo method. 
+
+%Lucia: say what we have done, i.e, we have analysed data from an experiment with a 16MeV proton beam on a Si target and we want to use the data to get a matrix that shows the gamma rays emitted by 28 Si for a given excitation energy. Briefly say the contents of the report.
+
+\section{Experimental setup and method}
+\subsubsection*{The basic concepts of a cyclotron}
+A cyclotron is a particle accelerator for charged particles. The particles are accelerated with an external electric field and together with a magnetic field the particles are contained in an orbit inside the cyclotron. In nuclear physics a cyclotron is used to accelerate charged particles so that they leave the cyclotron with the desired energy. The goal is then to study nuclear reactions that occur when the particle beam is directed to a target. Two different detectors can then be used to measure particles and $\gamma$-rays that are produced in the reaction. 
+
+A simple cyclotron consists of two half -cylinders placed side by side as in figure \ref{fig:cyclotron_draw}.
+\begin{figure}[htp]
+\centering
+\includegraphics[width=0.3\textwidth]{cyclotron_draw.jpg}
+\caption{A simple illustration of a cyclotron. The illustration is taken from \texttt{http://www.mn.uio.no/fysikk/english/research/about/infrastructure/OCL/ocl-photos/}}
+\label{fig:cyclotron_draw}
+\end{figure}
+Every time the particles pass between the two cylinders they are accelerated by an oscillating electric field. Therefore the particles increase speed and radius for every half round. Inside the cylinders the electric field is zero, but there is a magnetic field perpendicular to the plane showed in figure \ref{fig:cyclotron_draw} that contain the particles in a circular orbit. When the radius of the particle beam is bigger than the radius of the cylinders the particles leave the cyclotron. 
+
+\subsection{The Oslo Cyclotron laboratory (OCL)}
+The Oslo Cyclotron Laboratory (OCL) houses the only accelerator in Norway for ionized atoms in basic research\footnote{http://www.mn.uio.no/fysikk/english/research/about/infrastructure/OCL/index.html}. The accelerator is used in various fields of research for instance nuclear physics and nuclear chemistry. Other applications for the Cyclotrone are the production of isotopes for nuclear medicine. The reasearch in nuclear physics at Oslo Cyclotron Laboratory mainly focus on studying the level densities and radiative strength functions where the overall goal is to better understand the atomic nuclei. 
+
+\begin{figure}[htp]
+\centering
+\includegraphics[width=0.6\textwidth]{ocl-layout_mini.jpg}
+\caption{An overview of the Oslo Cyclotron Laboratory with the experimental hall to the right with the cyclotron at the bottom right. The beam line are indicated with a blue line and the target chamber is at the top left (CACTUS/SiRi). The possible beam types, energy and intensity ranges are indicated in the table to bottom left. }
+\label{fig:OLC_exp_hall}
+\end{figure}
+
+An overview of the Oslo Cyclotron Laboratory is given in figure \ref{fig:OLC_exp_hall}. The possible beam types, energy and intensity ranges are indicated in the table to bottom left. In figure \ref{fig:OLC_exp_hall} we can see the cyclotron vault to the far right with the cyclotron (MC-35 Scanditronix Cyclotron) at the bottom right. The beam of the accelerated particles travels first from the cyclotron along the beam line through a switching magnet and then to a analyzing magnet. The analyzing magnet directs the beam out of the cyclotron vault and into the experimental hall by turning the beam 90 degrees. Then the beam goes through another swiching magnet before hitting the target chamber (CACTUS/SiRi) to the far left in figure \ref{fig:OLC_exp_hall}. Around the target chamber there are two detectors, CACTUS and SiRi. The swiching magnets can also direct the beam to different target stations, but we will only have a closer look at the target chamber associated to the CACTUS and SiRi arrays as this is the target chamber used in the experiment. 
+
+\subsubsection{The CACTUS and SiRi detectors}
+The CACTUS/SiRi detector can be used to study particle-gamma coincidences. In figure \ref{fig: cactus_siri} we see an illustration of a particle from the beam hitting a target nucleus. After the reaction a gamma-ray and a particle is emitted in addition to the resulting nucleus beeing changed or excited. We see that the gamma is measured by the CACTUS detector and the emitted particle by the SiRi detector. The figure indicates that the angle between the incident trajectory and the trajectory of the emmitted particle is given as $\theta$.
+\begin{figure}[htp]
+\centering
+\includegraphics[width=0.5\textwidth]{cactus_siri.png}
+\caption{A incident particle hitting a target nucleus. The resulting emmited $gamma$-ray is detected by the CACTUS detectors and the emmitted particle is detected by the SiRi detector. The angle between the incident trajectory and the trajectory of the emmitted particle is given as $\theta$. The two parts of the SiRi detector, 'dE' and 'E' is indicated in the figure.}
+\label{fig: cactus_siri}
+\end{figure}
+
+The CACTUS detector measures the energies of the $\gamma$-rays. When looking at the front picture, figure \ref{fig:front_page}, it is not hard to imagine where the CACTUS detector have gotten its name from. The detector consists of 28 NaI scintillation detectors spherically distributed around the target chamber, pointing out like a Cactus. Each of the NaI scintillation detectors  measure the energy of the $\gamma$-radiation by using the excitation effect of the radiation on a scintillator material (NaI). When the scintillator is excited by radiation it produces a signal that is then converted into an electrical signal that the electronics of the detector processes\footnote{https://en.wikipedia.org/wiki/Scintillation\_counter}. 
+
+The SiRi-array measures the energy of the resulting emitted particle and consists of 8 Silicon detectors on a ring. Each detector is divided into 8 strips which also makes it possible to measure the angle of the particle. The Si detectors uses the properties of a semiconductor, doped Silicon, to measure the path and energy of the charged particles by detecting the small ionization currents that occur when the charged particles move through the material\footnote{https://en.wikipedia.org/wiki/Semiconductor\_detector}. In figure \ref{fig: siri} we see the Silicon Ring (SiRi) to the left and a illustration of one of the detectors on the right with the induvidual strips marked.
+\begin{figure}[htp]
+\centering
+\includegraphics[width=0.8\textwidth]{siri.png}
+\caption{The SiRi detector used to measure the energy of a particle from a particle-gamma coincidence. \textbf{Left:} A picture of the Silicon Ring (SiRi). \textbf{Right:} A drawing of one of the 8 detectors on the ring with the induvidual strips marked.}
+\label{fig: siri}
+\end{figure}
+
+The SiRi detector stops the emmited particle, so it looses all its energy as it moves trough the material. The detector is divided into two parts, one called 'dE' and the other simply 'E'. The first part 'dE' is 130 micrometers thick and this is where the particle looses some $\Delta E$ of its energy. In the other part 'E' the particle looses the remaining energy and stops. In addition, an Aluminium foil of 2.8mg/cm${}^2$ thickness is placed before the dE detector. The 'dE' and 'E' positions are indicated in figure \ref{fig: cactus_siri}.
+
+%Explain which sort of experiments we do in the lab: how do we measure emitted charged particles and gammas in coincidence, using SiRi and CACTUS. Explain that we can reconstruct the excitation energy levels of a nucleus from the measured charged particles and that we use this to build a coincidence matrix (related to probability of nuclear decay from excitation energy Ex with gammma energy Egamma). 
+
+%Briefly describe what SiRi and CACTUS are, and how we can use SIRI to plot the particle bananas and distinguish between the different kinds of particles. You might want to say what a scintillator is, and briefly define how the Si detector works.
+
+\subsection{Choice of reaction}% and preparations before the experiment}
+In this project we have chosen the reaction ${}^{28}\mathrm{Si(p,p')}^{28}\mathrm{Si}$ drawn in figure \ref{fig: reaction}. The incident proton will have an energy of 16MeV and the target of ${}^{28}$Si will have a thickness of 4mg/cm${}^2$. We will not perform the experiment, but study raw data from an earlier experiment pretending that we did perform the experiment. 
+
+\begin{figure}[htp]
+\centering
+\includegraphics[width=0.4\textwidth]{reaction.png}
+\caption{An illustration of the chosen ${}^{28}\mathrm{Si(p,p')}^{28}\mathrm{Si}$ reaction.}
+\label{fig: reaction}
+\end{figure}
+
+Before conducting the experiment we can study how the proton beam loses energy as it travels through the target and the other materials, until it reaches the E detector with the \texttt{OCL SiRi Kinematics Calculator}(\texttt{kin}) software developed by the OCL. This is to make shure that the beam does not have too much energy so it punches through the 'E' detector. 
+
+%Explain that we have codes  (KIN) to simulate how the charged particles lose energy as they travel through the target, dtectors, etc. Write down the example done in class and the results. ​
+
+%How much energy does it lose in each step? The target is 4mg/cm2 thickness, and the dE detector is 130 micrometers thick. In addition, an Al foil of 2.8mg/cm2 thickness is placed before the dE detector. The protons are scattered 48 degrees with respect to the beam direction.
+
+\section{Data analysis of the experimental data}
+The data stored from the experiment are the 'dE' and 'E' signals of the charged particles measured by SiRi and the energy of the $\gamma$-rays in coincidence with the charged particles, measured by the CACTUS detector. The data collected with the CACTUS and SiRi detectors are stored in event files; large files with the measured parameter from each event. To extract information from the experiment one have to analyze millions event. Luckily the OCL group has written a sorting code which does the sorting of the event files. In the process the user can choose to include different features to obtain the final result, a 'clean' coincidence matrix. In the analysis process the following programs have been used:
+\begin{itemize}
+\item \texttt{Makefile:} executable file that calls for example \texttt{User\_sort.cpp} and creates an executable called \texttt{sorting}.
+\item \texttt{User\_sort.cpp:} the main sorting code in C++. It is possible to modify the code to include time gates, gates on excited nuclear states and so on. It defines what the executable \texttt{sorting} will do when it is run. 
+\item \texttt{Sorting:} executable file created by the \texttt{Makefile}. It uses the batch file when run.
+\item \texttt{Name.batch:} holds information on where to find the data files to be sorted. 'Name' is usually the experiment reaction. The file also includes several parameters and calls the following two programmes:
+\begin{itemize}
+\item \texttt{gainshifts525.dat:} contains information about the calibration of the particle and gamma detectors, together with the time signal calibration.
+\item \texttt{zrangep.dat:} the range file for the ejected protons. It has information about how the ejected protons lose energy as they penetrate the E dE Si detectors.
+\end{itemize}
+\end{itemize}
+The sorting codes can first be run without calibration parameters ('plain') and later with calibration when the parameters are found step by step. All source codes can be found at \texttt{https://github.com/oslocyclotronlab/oslo-method-software}.
+
+\subsection{Particle calibration and bananas} \label{sec: particle_calib}
+First we have to calibrate the particle detectors, or the SiRi-array. This is done by plotting 'dE' versus 'E', obtaining curves commonly known as 'bananas'. To the left in figure \ref{fig: de_e} we see the uncalibrated plot of the bananas obtained when the sorting routine is run 'plain'. The bananas are characteristic for each type of ejected particle, there is one banana for each particle. On each banana we can see peaks corresponding to the excited states of the target nucleus. 
+
+\begin{figure}[htp]
+\centering
+\includegraphics[width=0.4\textwidth]{m_e_de_uncalibrated.png}
+\includegraphics[width=0.45\textwidth]{m_e_de_calibrated.png} 
+\caption{The 'particle bananas', or 'dE' versus 'E' plotted. \textbf{Left:} uncalibrated. \textbf{Right:} calibrated. Each banana corresponds to one emitted particle. We can also see the peacks corresponding to the excited states of the target nucleus.}
+\label{fig: de_e}
+\end{figure}
+
+The SiRi-array has 8 Silicon detectors, each devided into 8 strips. Theoretically all the bananas should be the same for a given angle. This is not the case experimentally. We correct this experimental effect by aligning all the detectors, or finding the corresponding gain og shift in reference to one detector. We also choose a reference point, for example the energies of the peaks in the bananas corresponding to the ground and first excited states. This reference point can be calculated with the \texttt{kin} software. 
+
+The response of the detectors should be approximately linear with energy in both $\Delta$E and E measurements and can be expressed as:
+\begin{align*}
+E(x) &= a_E + b_Ex\\
+\Delta E(x) &= a_\Delta + b_\Delta x
+\end{align*}
+where $x$ is the channel number, $a$ the shift in the energies and $b$ the gain in the energies. The coefficients $a$ and $b$ are then calculated in such a way that the value $E(x)$ and $\Delta E(x)$ for the reference peaks matches the values calculated with \texttt{kin}. This calibration is performed for all the 8 strips and the 8 detectors and then included in the \texttt{gain\_shift.dat} file. So when the calibration is done the gain-shift file includes the $a$ and $b$ coefficients for both the $\Delta$E and E for each detector.
+
+To the right in figure \ref{fig: de_e} we see the calibrated bananas obtained when the sorting routine is run with the gain-shift file included. We see that the calibrated plot is much clearer and have sharper excited state peaks than the uncalibrated plot. 
+
+\subsection{Selecting the data for the ${}^{28}$Si(p,p')$^{28}$Si reaction}
+When the particle calibration is done we want to only select the data from the ${}^{28}$Si(p,p')$^{28}$Si reaction, we need to gate on the banana corresponding to the emitted protons. This is done by using or 'commenting in' the range file \texttt{zrangep.dat} in the \texttt{.batch}-file. In the left plot in figure \ref{fig: banana_gate} we see the aparent thickness of the $\Delta$E detector. The peak is centered at $\approx 130 \mu$m which is the actual thickness of the $\Delta$E detector, and the width is $\approx 20\mu$m. The range file includes the peak and range read from the 'thickness plot', left plot in figure \ref{fig: banana_gate}. 
+
+When the range file is included in the \texttt{.batch}-file the sorting routine distributes the experimental data around the actual thickness of the $\Delta$E detector. This means that we have gated on the banana that corresponds to the emitted proton or the desired reaction ${}^{28}$Si(p,p')$^{28}$Si. The selected data can therefore now give us information about the reaction we want to study. 
+
+To the left in figure \ref{fig: banana_gate} we see the 'banana' plot obtained when running the sorting routine again with the range file. By comparing with the right plot in figure \ref{fig: de_e} we see that we have selected the banana corresponding to the emitted protons. 
+
+\begin{figure}[htp]
+\centering 
+\includegraphics[width=0.4\textwidth]{h_thick_fromcalibrated_zoom.png}
+\includegraphics[width=0.4\textwidth]{m_e_de_thick.png}
+\caption{Selecting the data for the ${}^{28}$Si(p,p')$^{28}$Si reaction. \textbf{Left:} The calculated thickness of the $\Delta$E detector. The peak is centered at $\approx 130 \mu$m which is the actual thickness of the $\Delta$E detector. Other peaks would have corresponded to other ejected particles. \textbf{Right:} The 'banana' plot after particle calibration and gating on one particle banana.}
+\label{fig: banana_gate}
+\end{figure}
+
+After including the range file and sorting again we can find the excitation levels of the final nucleus by projecting the coincidence matrix on the y axis and compare this with other experimental data. In table \ref{tab: e_levels} we see the excited states of ${}^{28}$Si collected from the database of NNDC \footnote{//www.nndc.bnl.gov/chart/getdataset.jsp?nucleus=28SI\&unc=nds}. 
+
+\begin{table}
+\centering
+\caption{The energy levels of ${}^{28}$Si from the Chart of Nuclides found on the NNDC website \texttt{//www.nndc.bnl.gov/chart/getdataset.jsp?nucleus=28SI\&unc=nds}. The uncertain digits are given in a parenthesis. }
+\begin{tabular}{|c|}
+\hline 
+E\_x [keV] \\ 
+\hline 
+0 \\ 
+\hline 
+1779.030 (11) \\ 
+\hline 
+4617.86 (4) \\ 
+\hline 
+4979.92 (8) \\ 
+\hline 
+6276.2 (7) \\ 
+\hline 
+6690.74 (15) \\ 
+\hline 
+\end{tabular} 
+\label{tab: e_levels}
+\end{table}
+
+In figure \ref{fig: proj_y_excitation} we see the coincidence matrix projected on the y axis. Each peak in the plot correspond to an excited state of ${}^{28}$Si. The six first excited stated are marked with a red circle. We see that the values of the excited states marked corresponds well to the values of the energy levels found in table \ref{tab: e_levels}. Peaks that do not correspond to a energy level of ${}^{28}$Si is most likely contamination which will be corrected for at a later stage in the analyze process. 
+
+\begin{figure}[htp]
+\centering
+\includegraphics[width=0.4\textwidth]{h_ex_calibrated-zoom.png}
+\caption{The coincidence matrix projected on the y axis giving number of counts versus energy, $E_x$. Each peak corresponds to a excited state of ${}^{28}$Si. The six first excited stated are marked with a red circle to be compared with table \ref{tab: e_levels}. }
+\label{fig: proj_y_excitation}
+\end{figure}
+
+%explain how we gated on the banana corresponding to the emitted protons to get info about 28Si. As a result, we obtain the excitation energies of the nucleus. Show the plot and compared with the data from the nndc website.
+
+\subsection{$\gamma$-calibration and treatment of the time signals}
+We will now look at the procedure used to calibrate the NaI detectors and the time signals. The CACTUS $\gamma$ detector consists of 28 NaI detectors, and due to differences in the electronics the time signals are not aligned. To correct for this we will use a similar procedure as in section \ref{sec: particle_calib}. We will choose one of the 28 detectors as a reference and shift all the other count peaks so that they align with the count peak of the reference detector. We will also account for the different responce in the detectors, or the gain as in section \ref{sec: particle_calib}. This is done by including the correct gain and shifts for the NaI detectors in the \texttt{gainshift.dat} file and run the sorting routine again as in section \ref{sec: particle_calib}.
+%could have included m_nai_e plot to show alignment of signals, but what are the axes?
+
+Finally we have to correct for the fact that the time signal, or the amplitude of the signal is dependent on the energy which is often refered to as 'the problem of walk'. This problem originates form the use of a spesific type of discriminator. The discriminator gives a time signal, or a count, every time the amplitude are above a certain threshold. This threshold is in our case independent on the signal which gives that the time signal is dependent on the energy. 
+
+To correct for the 'problem of walk' we have done a curve fitting to the data from all the NaI detectors, and coreccted for the energy dependence. In figure \ref{fig: time_corr} we see the uncorrected and corrected plot of the time channels versus the energy of all the NaI detectors.
+
+\begin{figure}[htp]
+\centering
+\includegraphics[width=0.4\textwidth]{m_nai_e_t_corrected.png}
+\includegraphics[width=0.5\textwidth]{m_nai_e_t_corrected_fit.png}
+\caption{The time channels plotted versus the energy of the all NaI detectors. \textbf{Left:} uncalibrated plot with time signals shifted due to LED. \textbf{Right:} calibrated plot, corrected whith a curve fitting to the data in the left plot.}
+\label{fig: time_corr}
+\end{figure}
+
+When the time signals are corrected we need to gate on the 'prompt gammas'. The 'prompt gammas' are the $\gamma$-rays that are in coincidence with the emitted proton. We can gate on the 'prompt gammas' by plotting the aligned time channels versus the number of counts. We then select the a  gate around the prompt peak so that we only select the experimental data corresponding to the desired reaction. 
+
+But when we measure the $\gamma$-rays we might also measure delayed gammas, radiation from a previously excited nucleus that did not instantly decay (form the more stable state) or background. The background includes $\gamma$-rays from other elements than the target that where excited. To get rid of the background we set a gate on a peak corresponding to the coincidences and subtract it to the gate on the prompt peak. When this is done we are finished with the $\gamma$ calibration.
+
+%- Explain that we first aligned them and show the plot of the m_nai signals aligned. Explain that we have leading edge discriminators, and therefore we need to correct from "walk". Show the signals corrected and explain how you did this.
+%- Selecting coincidences: show the plot and explain what is the prompt peak, what is the time resolution, and how we can calculate the time between beam pulses from the plot. Explain why we need to gate on the prompt peak.
+
+\subsection{ The coincidence matrix}
+When the data from the detectors have been corrected we are ready to plot the final goal; the coincidence matrix. In figure \ref{fig: coincidence} we see the coincidence matrix, the plot of the excitation energy $E_x$ versus the $\gamma$-energy. This matrix was obtained after particle, gamma and time calibration and the background have also been substracted. In the plot we see clear count peaks corresponding to the excited states of 28Si. 
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=0.75\textwidth]{m_alfna_week2.png}
+%\includegraphics[width=0.5\textwidth]{coincidence_wback}
+%\includegraphics[width=0.3\textwidth]{coincidence_noback}
+\caption{The coincidence matrix, the excitation energy $E_x$ versus the $\gamma$-energy after particle, gamma and time calibration and with the background subtracted. }
+\label{fig: coincidence}
+\end{figure}
+
+%Show the coincidence matrix. Mention that there is background, how it can be measure and that it was subtracted. Show the diagonal Eg=Ex in the matrix. Why do we see some counts outside? Explain the peaks we see and comp.re them to the results from the nndc website or the TOI.
+
+\section{The Oslo method}
+Usually the reason to obtain the coincidence matrix is to be able to perform the Oslo method. The benefit of performing the Oslo method is that it is possible to extract both the nuclear level density $\rho$ and the gamma strength function $\tau$ from one experiment. This again can be used to obtain the probability $P$ for the reaction given the excitation energy $E_x$ and the gamma energy $E_\gamma$ because:
+\[
+P(E_x, E_\gamma) \propto \tau(E_\gamma)\cdot \rho(E_{final})
+\]
+where $E_{final} = E_x - E_\gamma$. The Oslo method is based on three main steps:
+\begin{enumerate}
+\item Unfolding of the $\gamma$-ray spectra
+\item Extraction of first-generation $\gamma$-rays
+\item Extraction of the nuclear level density and the gamma strength function
+\end{enumerate}
+will look briefly at the first two. 
+
+\subsection{Unfolding of the coincidence matrix}
+%this step concerns the correction of the  -ray spectra for the response and the e ciency of the detectors. This correction is made for each excitation energy bin in order to obtain its cor- responding true  -ray spectra.
+
+The unfolding procedure corrects for the response of the detectors, or the ways that the $\gamma$-rays can interact with the matter in the detector. When the photon with energy $E_\gamma$ interacts with the detector, we will not see only one peak at the energy $E_\gamma$, we will ses an spectre corresponding to the possible interactions of the photon with matter. 
+
+The $\gamma$-rays can interact with matter in the following processes:
+\begin{enumerate}
+\item The photo electric effect
+\item Compton scattering
+\item Pair production (the gamma can produce a electron-positron pair and one or both can escape. 
+\end{enumerate}
+
+In figure \ref{fig: gamma_interaction} we see an illustration giving a general picture of the peaks produced with the different effects mentioned above. To the far right we see the 'full energy peak' produced by the photo electric effect. Following to lower energies we notice the compton edge before the single escape peak. The single and double escape peaks corresponds to the escape of one or both of the particles in the electron-positron pair positioned 1x and 2x times the electron mass from the full energy peak. The 'backscattering peak' for the lowest possible energy with the compton effect is not included in the figure.
+
+\begin{figure}[htp]
+\centering
+\includegraphics[width=0.3\textwidth]{gamma_interaction.png}
+\caption{An illustration of the number of counts versus the gamma energy with the typical peaks obtained due to the photo electric effect, Compton scattering or pair reactions. }
+\label{fig: gamma_interaction}
+\end{figure}
+
+It is therefore many processes that contributes to the final $\gamma$ spectrum. To correct, or unfold the measured gamma spectrum we need to obtain the response matrix $\bf R$ that contains all the information about the response of the detector. We can express the unfolded gamma spectrum $f$ as:
+\[
+f = \bf{R} u
+\]
+where $u$ is the measured spectrum. The response $\bf R$ can be measured, and this has already been done. To obtain the unfolded matrix we simply type a command in the \texttt{mama} software developed at OCL. In figure \ref{fig: un_coincidence} we see the matrix obtained after running the unfolding procedure. When comparing with figure \ref{fig: coincidence} we see that most points under the diagonal $E_x=$E have disappeared. This is expected because all points under the diagonal $E_x=$E implies that the incomming energy $E_x$ would be less than the resulting energy E. So it is expected that all the counts below this diagonal disappeares after the unfolding, which we can see is the case in \ref{fig: un_coincidence}. 
+
+\begin{figure}[htp]
+\centering
+\includegraphics[width=0.8\textwidth]{coincidence_noback}
+\caption{The unfolded coincidence matrix, the excitation energy $E_x$ versus the $\gamma$-energy.}
+\label{fig: un_coincidence}
+\end{figure}
+
+%Explain the interactions of gamma with matter, and what does unfolding mean.
+%Show the unfolded matrix.
+
+\subsection{Multiplicity and the extraction of the first-generation (primary) $\gamma$-rays emitted}
+In figure \ref{fig: gamma_decay} we see an illustration of the possible paths a photon can take to the ground state from an excited state. The secondary photons are marked with a red circle, the primary unmarked. When we count the number of $\gamma$-rays with an energy corresponding to a step between two energy levels, we might also count the secondary photons. This will not give us the right picture of the probability to go from one energy level to another. We need a way to separate the different paths taken by the photon, a way to only select the primary photons. This can be done by introducing the multiplicity. 
+
+\begin{figure}[htp]
+\centering
+\includegraphics[width=0.45\textwidth]{gamma_decay.png}
+\caption{An illustration of the possible paths a photon emitted from an excited state can take to the ground state. The secondary photons are marked with a red circle, the primary unmarked.}
+\label{fig: gamma_decay}
+\end{figure}
+
+The multiplicity is defined as the average number of $\gamma$-rays emitted for a given excitation energy $E_x$. There are at least two methods for obtaining the multiplicity. The average multiplicity can be defined as:
+\begin{equation}
+\langle M \rangle = \frac{E_x}{\langle E_\gamma \rangle}
+\label{eq: M_calc}
+\end{equation}
+where $\langle E_\gamma \rangle$ is the mean of the gamma energies. Another definition is:
+\begin{equation}
+\langle M \rangle = c \cdot \frac{N_c}{N_s}
+\label{eq: M_iterative}
+\end{equation}
+where $c$ is a normalisation constant calculated from a energy level for which the multiplicity is known, by for example equation \ref{eq: M_calc}. $N_s$ is the single spectra which means the spectre corresponding to the 'banana' plots. $N_c$ is the coincidence spectre which means the spectre corresponding to the coincidence matrix where each $\gamma$-ray energy correspond, or are in coincidence with a proton. The method based on equation \ref{eq: M_iterative} is an iterative method also known as the 'first-generation method' that when applied extracts the primary $\gamma$-rays from the data. 
+
+The next step in the Oslo method would have been to obtain the nuclear level density and the gamma strength function, but we have left this out. A master thesis would have included the whole Oslo method and have a more detailed description of the analysis process than this paper. 
+
+
+%would do next:
+%Extraction of the nuclear level density and  -strength function [55]: an iter- ative procedure is developed to fit the experimental matrix of primary  -rays and get both these statistical functions simultaneously. The calculated ex- pressions depend on three parameters, which are then calculated by fitting to experimental data, i.e. both nuclear level density and  -strength functions are normalized.
+
+\section{Discussion and Experiences}
+In this paper we have used experimental data from the ${}^{28}\mathrm{Si(p,p')}^{28}\mathrm{Si}$ reaction, learned about the experimental setup at the Oslo Cyclotron Laboratory and the main aspects of the Oslo method. We have studied the analysis methods that are used to 'clean' raw data at OCL and seen that a large amount of work is needed before one can apply the Oslo method to the data. It is not a surprise that most of the analyze work is done by computer programs developed at OCL as there is millions of events obtained form an experiment. We have also seen that our data matched well with experimental data from the NNDC database.
+
+Finally we obtained the unfolded coincidence matrix that in a master thesis would have been used to obtain the nuclear level density and the strength function. We have learned that the motivation for using the Oslo method is that the nuclear level density and the strength function is very useful in both reactor and astrophysics. 
+
+This have been a very educative project, a large thank you to the Oslo Cyclotron Laboratory and Lucia for having us! 
+
+
+%\noindent\rule{\textwidth}{1pt}
+
+\end{document}
+
+
+
+
+
