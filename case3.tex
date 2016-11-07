@@ -21,6 +21,8 @@
 
 \documentclass[paper=a4, fontsize=11pt]{scrartcl} % A4 paper and 11pt font size
 
+\usepackage{graphicx}
+
 \usepackage[T1]{fontenc} % Use 8-bit encoding that has 256 glyphs
 \usepackage{fourier} % Use the Adobe Utopia font for the document - comment this line to return to the LaTeX default
 \usepackage[english]{babel} % English language/hyphenation
@@ -41,11 +43,11 @@
 \renewcommand{\footrulewidth}{0pt} % Remove footer underlines
 \setlength{\headheight}{13.6pt} % Customize the height of the header
 
-\numberwithin{equation}{section} % Number equations within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
-\numberwithin{figure}{section} % Number figures within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
-\numberwithin{table}{section} % Number tables within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+%\numberwithin{equation}{section} % Number equations within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+%\numberwithin{figure}{section} % Number figures within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+%\numberwithin{table}{section} % Number tables within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
 
-\setlength\parindent{0pt} % Removes all indentation from paragraphs - comment this line for an assignment with lots of text
+%\setlength\parindent{0pt} % Removes all indentation from paragraphs - comment this line for an assignment with lots of text
 
 %----------------------------------------------------------------------------------------
 %	TITLE SECTION
@@ -73,19 +75,76 @@
 
 %----------------------------------------------------------------------------------------
 
-\section*{Description of the assignment}
+%\section*{Description of the assignment}
 
-At the Oslo cyclotron laboratory (OCL) experiments are carried out to study the nuclear structure of isotopes at excitation energies up to the neutron binding energy. This is done by bombarding a thin target foil, typically 0.5 – 4 mg/cm2 thick, with light ion beam accelerated by the cyclotron. The cyclotron can accelerate protons, deuterons, 3He and 4He beams. The ∆E-E-detector array SiRi is placed inside a vacuum chamber. On the outside NaI-detectors are placed at 25 cm distance from the target. The scintillator detectors are collimated with lead collimators. The analysis method (mostly) applied to the data, the Oslo method, requires particle-gamma coincidences.
+%At the Oslo cyclotron laboratory (OCL) experiments are carried out to study the nuclear structure of isotopes at excitation energies up to the neutron binding energy. This is done by bombarding a thin target foil, typically 0.5 – 4 mg/cm2 thick, with light ion beam accelerated by the cyclotron. The cyclotron can accelerate protons, deuterons, 3He and 4He beams. The ∆E-E-detector array SiRi is placed inside a vacuum chamber. On the outside NaI-detectors are placed at 25 cm distance from the target. The scintillator detectors are collimated with lead collimators. The analysis method (mostly) applied to the data, the Oslo method, requires particle-gamma coincidences.
 
-Give a general overview of the CACTUS+SiRi detector setup at OCL. Describe the detectors of the setup and their characteristics. What is done to the signals from the detectors in order to have events that we can analyze to extract the information we are interested in?
-
-%----------------------------------------------------------------------------------------
+%Give a general overview of the CACTUS+SiRi detector setup at OCL. Describe the detectors of the setup and their characteristics. What is done to the signals from the detectors in order to have events that we can analyze to extract the information we are interested in?
 
 %----------------------------------------------------------------------------------------
 
-\section*{General overview of the CACTUS + SiRi detector setup at OCL}
+%----------------------------------------------------------------------------------------
+
+\section{General overview of the CACTUS + SiRi detector setup at OCL}
+
+%Give a general overview of the CACTUS+SiRi detector setup at OCL. Describe the detectors of the setup and their characteristics.
+
+The Oslo Cyclotron Laboratory (OCL) houses the only accelerator in Norway for ionized atoms in basic research\footnote{http://www.mn.uio.no/fysikk/english/research/about/infrastructure/OCL/index.html}. Experiments are carried out to study the nuclear structure of isotopes at excitation energies up to the neutron binding energy. This is done by bombarding a thin target foil, typically 0.5 - 4 mg/cm2 thick, with light ion beam accelerated by the cyclotron.
+
+An overview of the Oslo Cyclotron Laboratory is given in figure \ref{fig:OLC_exp_hall}. The possible beam types, energy and intensity ranges are indicated in the table to bottom left. We can see the cyclotron vault to the far right with the cyclotron (MC-35 Scanditronix Cyclotron) at the bottom right. The beam of the accelerated particles travels first from the cyclotron along the beam line through switching and analyzing magnets before hitting the target chamber (CACTUS/SiRi) to the far left in figure \ref{fig:OLC_exp_hall}. The $\Delta$E-E-detector array SiRi is placed inside a vacuum chamber and the NaI-detectors (CACTUS) are placed at a small distance, both surrounding the target chamber. 
+
+\begin{figure}[htp]
+\centering
+\includegraphics[width=0.6\textwidth]{FYS3180-master/ocl-layout_mini.jpg}
+\caption{An overview of the Oslo Cyclotron Laboratory with the experimental hall to the right with the cyclotron at the bottom right. The beam line are indicated with a blue line and the target chamber is at the top left (CACTUS/SiRi). The possible beam types, energy and intensity ranges are indicated in the table to bottom left. }
+\label{fig:OLC_exp_hall}
+\end{figure}
+
+The analysis method (mostly) applied to the data, the Oslo method, requires particle-gamma coincidences The coincidences can be studied by using the CACTUS/SiRi detectors. In figure \ref{fig: cactus_siri} we see an illustration of a particle from the beam hitting a target nucleus. After the reaction a gamma-ray and a particle is emitted in addition leaving the resulting nucleus excited and/or chemically changed. We see that the gamma is measured by the CACTUS detector and the emitted particle by the SiRi detector. The angle between the incident trajectory and the trajectory of the emmitted particle is given as $\theta$.
+\begin{figure}[htp]
+\centering
+\includegraphics[width=0.5\textwidth]{FYS3180-master/cactus_siri.png}
+\caption{A incident particle hitting a target nucleus. The resulting emmited $gamma$-ray is detected by the CACTUS detectors and the emmitted particle is detected by the SiRi detector. The angle between the incident trajectory and the trajectory of the emmitted particle is given as $\theta$. The two parts of the SiRi detector, 'dE' and 'E' is indicated in the figure.}
+\label{fig: cactus_siri}
+\end{figure}
+
+\subsection*{The CACTUS detectors}
 
 
+The CACTUS detectors measures the energies of the $\gamma$-rays. The detector setup consists of 28 NaI scintillation detectors spherically distributed around the target chamber, pointing out like a Cactus. The detectors are placed at 25 cm distance from the target. The scintillator detectors are collimated with lead collimators. 
+
+%collimators??
+
+
+Each of the NaI scintillation detectors  measure the energy of the $\gamma$-radiation by using the excitation effect of the radiation on a scintillator material (NaI). When the scintillator is excited by radiation it produces a signal that is then converted into an electrical signal that the electronics of the detector processes\footnote{https://en.wikipedia.org/wiki/Scintillation\_counter}. 
+
+%% utdyp mer over!!!!!! 
+
+
+
+\begin{figure}[htp]
+\centering
+\includegraphics[width=0.4\textwidth]{FYS3180-master/cactus_forside.jpg}
+\caption{The CACTUS detectors measures the energies of the $\gamma$-rays emitted in a reaction.}
+\label{fig: CACTUS}
+\end{figure}
+
+
+\subsection*{The SiRi detectors}
+
+
+The SiRi-array measures the energy of the resulting emitted particle and consists of 8 Silicon detectors on a ring. Each detector is divided into 8 strips which also makes it possible to measure the angle of the particle. The Si detectors uses the properties of a semiconductor, doped Silicon, to measure the path and energy of the charged particles by detecting the small ionization currents that occur when the charged particles move through the material\footnote{https://en.wikipedia.org/wiki/Semiconductor\_detector}. In figure \ref{fig: siri} we see the Silicon Ring (SiRi) to the left and a illustration of one of the detectors on the right with the induvidual strips marked.
+\begin{figure}[htp]
+\centering
+\includegraphics[width=0.8\textwidth]{FYS3180-master/siri.png}
+\caption{The SiRi detector used to measure the energy of a particle from a particle-gamma coincidence. \textbf{Left:} A picture of the Silicon Ring (SiRi). \textbf{Right:} A drawing of one of the 8 detectors on the ring with the induvidual strips marked.}
+\label{fig: siri}
+\end{figure}
+
+The SiRi detector stops the emmited particle, so it looses all its energy as it moves trough the material. The detector is divided into two parts, one called 'dE' and the other simply 'E'. The first part 'dE' is 130 micrometers thick and this is where the particle looses some $\Delta E$ of its energy. In the other part 'E' the particle looses the remaining energy and stops. In addition, an Aluminium foil of 2.8mg/cm${}^2$ thickness is placed before the dE detector. The 'dE' and 'E' positions are indicated in figure \ref{fig: cactus_siri}.
+
+
+%% utdyp mer om hvordan fungerer!!!!!! 
 
 
 
@@ -97,7 +156,7 @@ Give a general overview of the CACTUS+SiRi detector setup at OCL. Describe the d
 
 \section*{Handling of signals and events}
 
-
+%What is done to the signals from the detectors in order to have events that we can analyze to extract the information we are interested in?
 
 
 
